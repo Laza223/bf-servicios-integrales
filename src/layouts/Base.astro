@@ -1,0 +1,250 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import { real as trabajosReales } from '../data/trabajos';
+import { business, coverage, waLink, telLink } from '../data/business';
+import { getCollection } from 'astro:content';
+import ogDefault from '../assets/placeholder/distribucion.jpg';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  title: string;
+  description: string;
+  waMessage: string;
+  ogImage?: ImageMetadata;
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, waMessage, ogImage = ogDefault, jsonLd = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const businessImg = await getImage({ src: ogDefault, width: 1200, height: 630, format: 'jpeg', fit: 'cover' });
+const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpeg', fit: 'cover' });
+const ogUrl = new URL(og.src, Astro.site).href;
+
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
+
+const nav = [
+  { href: '/electricidad-industrial/', label: 'Industria' },
+  { href: '/camaras-de-seguridad/', label: 'Cámaras' },
+  { href: '/alarmas/', label: 'Alarmas' },
+  { href: '/porteros-electricos/', label: 'Porteros' },
+  { href: '/electricista-domiciliario/', label: 'Electricista 24 h' },
+  { href: '/portones-automaticos/', label: 'Portones' },
+  ...(trabajosReales ? [{ href: '/trabajos/', label: 'Trabajos' }] : []),
+];
+const current = Astro.url.pathname;
+
+const businessLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Electrician',
+  '@id': `${business.url}/#negocio`,
+  name: business.name,
+  description: `${business.tagline} en ${business.locality}, ${business.region}. Urgencias 24 h, visita y presupuesto sin cargo.`,
+  url: `${business.url}/`,
+  telephone: business.phone,
+  ...(business.email ? { email: business.email } : {}),
+  image: new URL(businessImg.src, Astro.site).href,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: business.locality,
+    addressRegion: business.region,
+    addressCountry: business.country,
+  },
+  geo: { '@type': 'GeoCoordinates', ...business.geo },
+  areaServed: [...coverage.partido, ...coverage.zona].map((name) => ({
+    '@type': 'City',
+    name: `${name}, ${business.region}`,
+  })),
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  },
+  paymentAccepted: business.payments.join(', '),
+  currenciesAccepted: 'ARS',
+  knowsAbout: servicios.map((s) => s.data.serviceType),
+  ...(business.instagram ? { sameAs: [business.instagram] } : {}),
+};
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#142D4E" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="geo.region" content="AR-B" />
+    <meta name="geo.placename" content={`${business.locality}, ${business.region}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(businessLd)} />
+    {jsonLd.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header">
+      <div class="wrap bar">
+        <a class="logo" href="/">
+          <Logo />
+          <span class="logo-text">
+            <span class="logo-name">Servicios<br />Integrales</span>
+            <span class="visually-hidden">BF Servicios Integrales, inicio</span>
+          </span>
+        </a>
+
+        <nav class="nav-desktop" aria-label="Principal">
+          <ul>
+            {nav.map((n) => (
+              <li><a href={n.href} aria-current={current === n.href ? 'page' : undefined}>{n.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <div class="bar-actions">
+          <a class="bar-tel" href={telLink} data-cta="tel-header"><Icon name="Phone" size={18} /> {business.phoneDisplay}</a>
+          <a class="btn btn-wa" href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-header">
+            <Icon name="whatsapp" size={20} /> <span>WhatsApp</span>
+          </a>
+          <details class="nav-mobile">
+            <summary aria-label="Abrir menú"><Icon name="Menu" size={26} /></summary>
+            <nav aria-label="Menú">
+              <ul>
+                <li><a href="/">Inicio</a></li>
+                {servicios.map((s) => (
+                  <li><a href={`/${s.id}/`} aria-current={current === `/${s.id}/` ? 'page' : undefined}><Icon name={s.data.icon} size={20} /> {s.data.name}</a></li>
+                ))}
+                {trabajosReales && <li><a href="/trabajos/"><Icon name="Images" size={20} /> Trabajos realizados</a></li>}
+              </ul>
+            </nav>
+          </details>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap foot-grid">
+        <div class="foot-brand">
+          <p class="foot-name">{business.name}</p>
+          <p>{business.tagline} en {business.locality}, {business.region}. Trabajamos en todo el partido de Luján y la zona, y en obras de todo el país con viáticos.</p>
+          <ul class="foot-contact">
+            <li><a href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-footer"><Icon name="whatsapp" size={18} /> WhatsApp</a></li>
+            <li><a href={telLink} data-cta="tel-footer"><Icon name="Phone" size={18} /> {business.phoneDisplay}</a></li>
+            {business.email && <li><a href={`mailto:${business.email}`}><Icon name="Mail" size={18} /> {business.email}</a></li>}
+            {business.instagram && <li><a href={business.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Instagram</a></li>}
+          </ul>
+        </div>
+        <div>
+          <p class="foot-title">Servicios</p>
+          <ul class="foot-links">
+            {servicios.map((s) => <li><a href={`/${s.id}/`}>{s.data.name}</a></li>)}
+            {trabajosReales && <li><a href="/trabajos/">Trabajos realizados</a></li>}
+          </ul>
+        </div>
+        <div>
+          <p class="foot-title">Zona de trabajo</p>
+          <p class="foot-zones">{[...coverage.partido, ...coverage.zona].join(' · ')}</p>
+          <p class="foot-title">Formas de pago</p>
+          <p class="foot-zones">{business.payments.join(' · ')}</p>
+        </div>
+      </div>
+      <div class="wrap foot-legal">
+        <p>© {new Date().getFullYear()} {business.name} · {business.locality}, {business.regionShort} · {business.hours}</p>
+        <p>Fotos ilustrativas de Wikimedia Commons: «Electrical panel» de CambridgeBayWeather (CC BY-SA 4.0), «Electrical Distribution» de Carl Lender (CC BY 2.0) y «Outdoor cctv» (CC0).</p>
+      </div>
+    </footer>
+
+    <div class="mobile-cta" role="region" aria-label="Contacto rápido">
+      <a class="mc-call" href={telLink} data-cta="tel-sticky"><Icon name="Phone" size={20} /> Llamar</a>
+      <a class="mc-wa" href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-sticky"><Icon name="whatsapp" size={20} /> WhatsApp</a>
+    </div>
+  </body>
+</html>
+
+<style>
+  .skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--accent); color: var(--brand-900); padding: 0.6rem 1rem; border-radius: var(--radius); font-weight: 700; }
+  .skip:focus { top: 1rem; }
+
+  .site-header { position: sticky; top: 0; z-index: 50; background: var(--brand); color: var(--on-brand); box-shadow: 0 1px 0 rgb(255 255 255 / 0.06), 0 6px 20px rgb(11 27 48 / 0.18); }
+  .bar { display: flex; align-items: center; gap: 0.75rem; min-height: 4.25rem; }
+  .logo { display: inline-flex; align-items: center; gap: 0.55rem; min-width: 0; color: inherit; text-decoration: none; margin-right: auto; }
+  .logo:hover { color: inherit; }
+  .logo :global(.bf-mark) { height: 2.35rem; width: auto; flex: none; }
+  .logo-text { display: grid; line-height: 1.1; white-space: nowrap; min-width: 0; overflow: hidden; }
+  .logo-name { font-weight: 900; font-stretch: 125%; font-size: 0.82rem; line-height: 1.02; text-transform: uppercase; letter-spacing: 0.01em; }
+
+  .nav-desktop { display: none; }
+  .nav-desktop ul { display: flex; gap: 0.25rem; }
+  .nav-desktop a { display: block; padding: 0.55rem 0.7rem; color: var(--on-brand); text-decoration: none; font-weight: 600; font-size: 0.97rem; border-radius: 4px; white-space: nowrap; }
+  .nav-desktop a:hover { background: rgb(255 255 255 / 0.08); color: #fff; }
+  .nav-desktop a[aria-current='page'] { box-shadow: inset 0 -3px 0 var(--accent); border-radius: 0; }
+
+  .bar-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .btn-wa { min-height: 2.75rem; padding: 0.55rem 1rem; font-size: 0.98rem; }
+  .btn-wa { display: none; } /* en mobile lo cubre la barra fija inferior */
+
+  .nav-mobile summary { list-style: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: var(--radius); cursor: pointer; color: var(--on-brand); }
+  .nav-mobile summary::-webkit-details-marker { display: none; }
+  .nav-mobile summary:hover { background: rgb(255 255 255 / 0.08); }
+  .nav-mobile nav { position: absolute; left: 0; right: 0; top: 100%; background: var(--brand-900); padding: 0.75rem var(--gutter) 1.25rem; box-shadow: 0 18px 30px rgb(11 27 48 / 0.35); }
+  .nav-mobile nav a { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 0.25rem; color: #fff; text-decoration: none; font-weight: 600; border-bottom: 1px solid rgb(255 255 255 / 0.08); }
+  .nav-mobile nav a :global(.icon) { color: var(--on-brand-muted); }
+
+  @media (min-width: 30rem) {
+    .bar { gap: 1.25rem; }
+    .logo { gap: 0.7rem; }
+    .logo-name { font-size: 0.95rem; }
+    .logo :global(.bf-mark) { height: 2.6rem; }
+  }
+  @media (min-width: 72rem) {
+    .nav-desktop { display: block; }
+    .nav-mobile { display: none; }
+  }
+
+  .site-footer { background: var(--brand-900); color: var(--on-brand-muted); padding-block: 4rem 6.5rem; font-size: 0.97rem; }
+  .foot-grid { display: grid; gap: 2.5rem; }
+  .foot-name { color: #fff; font-weight: 800; font-stretch: 110%; font-size: 1.25rem; margin-bottom: 0.6rem; }
+  .foot-brand > p { max-width: 46ch; }
+  .foot-contact { margin-top: 1.25rem; display: grid; gap: 0.6rem; }
+  .foot-contact a, .foot-links a { color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; }
+  .foot-contact a:hover, .foot-links a:hover { color: var(--accent); }
+  .foot-title { color: #fff; font-weight: 700; margin-bottom: 0.75rem; }
+  .foot-title:not(:first-child) { margin-top: 1.5rem; }
+  .foot-links { display: grid; gap: 0.45rem; }
+  .foot-zones { max-width: 40ch; }
+  .foot-legal { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid rgb(255 255 255 / 0.1); display: grid; gap: 0.35rem; font-size: 0.85rem; }
+  @media (min-width: 48rem) {
+    .foot-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+    .site-footer { padding-bottom: 3rem; }
+  }
+
+  .mobile-cta { position: fixed; z-index: 60; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: 1fr 1.6fr; gap: 0.5rem; padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom)); background: rgb(255 255 255 / 0.97); box-shadow: 0 -1px 0 var(--line), 0 -8px 24px rgb(11 27 48 / 0.12); }
+  .mobile-cta a { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3.1rem; border-radius: var(--radius); font-weight: 750; text-decoration: none; }
+  .mc-call { background: var(--brand); color: #fff; }
+  .mc-call:hover { color: #fff; background: var(--brand-700); }
+  .mc-wa { background: var(--accent); color: var(--brand-900); }
+  .mc-wa:hover { color: var(--brand-900); background: #fb8a3c; }
+  .bar-tel { display: none; align-items: center; gap: 0.45rem; color: #fff; font-weight: 700; text-decoration: none; white-space: nowrap; padding: 0.5rem 0.4rem; }
+  .bar-tel:hover { color: #fff; text-decoration: underline; }
+  @media (min-width: 48rem) { .mobile-cta { display: none; } .btn-wa, .bar-tel { display: inline-flex; } }
+</style>

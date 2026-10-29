@@ -1,0 +1,35 @@
+---
+interface Props {
+  faqs: readonly { q: string; a: string }[];
+  heading?: string;
+}
+const { faqs, heading = 'Preguntas frecuentes' } = Astro.props;
+---
+
+<section class="section faq" aria-labelledby="faq-titulo">
+  <div class="wrap faq-grid">
+    <h2 id="faq-titulo">{heading}</h2>
+    <div class="list">
+      {faqs.map((f, i) => (
+        <details open={i === 0}>
+          <summary><h3>{f.q}</h3></summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid { display: grid; gap: 2rem; }
+  .list { border-top: 1px solid var(--line); }
+  details { border-bottom: 1px solid var(--line); }
+  summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 0; }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { font-size: 1.15rem; font-stretch: 105%; font-weight: 700; letter-spacing: -0.005em; color: var(--text); }
+  summary::after { content: ''; flex: none; width: 0.7rem; height: 0.7rem; border-right: 2.5px solid var(--brand); border-bottom: 2.5px solid var(--brand); transform: rotate(45deg) translateY(-25%); transition: transform 0.3s var(--ease); }
+  details[open] summary::after { transform: rotate(-135deg) translateY(-10%); }
+  summary:hover h3 { color: var(--brand); }
+  details p { padding: 0 2.5rem 1.4rem 0; color: var(--muted); max-width: 68ch; }
+  @media (min-width: 60rem) { .faq-grid { grid-template-columns: 1fr 2fr; gap: 4rem; } }
+</style>

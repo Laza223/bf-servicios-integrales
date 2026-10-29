@@ -1,0 +1,17 @@
+---
+// Monograma BF redibujado del logo del dueño (B y F en bloque, barra superior de la F en naranja).
+// PENDIENTE: reemplazar por el archivo vectorial original cuando lo pase el dueño.
+interface Props {
+  tone?: 'on-dark' | 'on-light';
+  class?: string;
+}
+const { tone = 'on-dark', class: className } = Astro.props;
+const ink = tone === 'on-dark' ? '#ffffff' : 'var(--brand)';
+---
+
+<svg class:list={['bf-mark', className]} viewBox="60 140 730 365" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <path fill={ink} fill-rule="evenodd" d="M66 145H385L445 205V292L412 318L445 350V440L388 498H66ZM170 218H345V282H170ZM170 355H345V425H170Z" />
+  <path fill={ink} d="M470 232H555V498H415L470 450Z" />
+  <path fill={ink} d="M555 277H712L722 287V345L712 355H555Z" />
+  <path fill="#F97316" d="M478 145H752L783 181L752 218H476L455 197V168Z" />
+</svg>

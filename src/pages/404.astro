@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ServiceRows from '../components/ServiceRows.astro';
+
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="Página no encontrada | BF Servicios Integrales"
+  description="La página que buscás no existe. Mirá nuestros servicios de electricidad y seguridad en Luján."
+  waMessage="Hola BF, vi la web y quiero hacer una consulta."
+  noindex
+>
+  <section class="section">
+    <div class="wrap nf">
+      <div>
+        <h1>Esta página no existe</h1>
+        <p class="lede">Puede que el link esté mal escrito o que la página se haya movido. Elegí el servicio que buscás o <a href="/">volvé al inicio</a>.</p>
+      </div>
+      <ServiceRows items={servicios} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { display: grid; gap: 2.5rem; }
+  .nf .lede { margin-top: 1.25rem; }
+  @media (min-width: 60rem) { .nf { grid-template-columns: 1fr 1.3fr; gap: 4rem; } }
+</style>

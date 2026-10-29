@@ -1,0 +1,155 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Credentials from '../components/Credentials.astro';
+import ServiceRows from '../components/ServiceRows.astro';
+import Process from '../components/Process.astro';
+import Faq from '../components/Faq.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { business, coverage, waLink, telLink } from '../data/business';
+
+export async function getStaticPaths() {
+  const servicios = await getCollection('servicios');
+  return servicios.map((s) => ({ params: { slug: s.id }, props: { entry: s } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'servicios'>;
+}
+const { entry } = Astro.props;
+const d = entry.data;
+const all = await getCollection('servicios');
+const related = d.related
+  .map((id) => all.find((s) => s.id === id))
+  .filter((s): s is CollectionEntry<'servicios'> => Boolean(s));
+
+const pageUrl = `${business.url}/${entry.id}/`;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: d.h1,
+    serviceType: d.serviceType,
+    description: d.description,
+    url: pageUrl,
+    provider: { '@id': `${business.url}/#negocio` },
+    areaServed: [...coverage.partido, ...coverage.zona].map((name) => ({ '@type': 'City', name: `${name}, ${business.region}` })),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: d.name,
+      itemListElement: d.items.map((i) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: i.title, description: i.text } })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${business.url}/` },
+      { '@type': 'ListItem', position: 2, name: d.name, item: pageUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+const isUrgent = entry.id === 'electricista-domiciliario';
+---
+
+<Base title={d.title} description={d.description} waMessage={d.waMessage} ogImage={d.image} jsonLd={jsonLd}>
+  <section class="hero">
+    <Image src={d.image} alt="" class="hero-bg" widths={[640, 960, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <div class="wrap hero-inner">
+      <nav class="crumbs" aria-label="Migas de pan">
+        <a href="/">Inicio</a> <span aria-hidden="true">/</span> <span aria-current="page">{d.name}</span>
+      </nav>
+      <h1>{d.h1}</h1>
+      <p class="hero-lede">{d.lead}</p>
+      <div class="hero-actions">
+        <a class="btn" href={waLink(d.waMessage)} target="_blank" rel="noopener" data-cta={`whatsapp-hero-${entry.id}`}>
+          <Icon name="whatsapp" size={22} /> {d.ctaLabel}
+        </a>
+        <a class="btn btn--ghost" href={telLink} data-cta={`tel-hero-${entry.id}`}>
+          <Icon name="Phone" size={20} /> {isUrgent ? `Llamar · ${business.phoneDisplay}` : 'Llamar · urgencias 24 h'}
+        </a>
+      </div>
+      <div class="hero-creds"><Credentials /></div>
+    </div>
+  </section>
+
+  <section class="section incluye" aria-labelledby="incluye-titulo">
+    <div class="wrap inc-grid">
+      <div class="inc-head">
+        <h2 id="incluye-titulo">Qué hacemos</h2>
+        <p class="inc-sub">{d.summary} Visita y presupuesto sin cargo en {business.locality} y alrededores.</p>
+        <a class="btn inc-cta" href={waLink(d.waMessage)} target="_blank" rel="noopener" data-cta={`whatsapp-incluye-${entry.id}`}>
+          <Icon name="whatsapp" size={22} /> {d.ctaLabel}
+        </a>
+      </div>
+      <ol class="inc-list">
+        {d.items.map((i) => (
+          <li>
+            <h3>{i.title}</h3>
+            <p>{i.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Process />
+
+  <Faq faqs={d.faqs} />
+
+  {related.length > 0 && (
+    <section class="section related" aria-labelledby="rel-titulo">
+      <div class="wrap rel-grid">
+        <h2 id="rel-titulo">También hacemos</h2>
+        <ServiceRows items={related} />
+      </div>
+    </section>
+  )}
+
+  <FinalCta
+    heading={isUrgent ? '¿Tenés una urgencia ahora?' : 'Pedí tu visita sin cargo'}
+    text={`Escribinos por WhatsApp y coordinamos. Trabajamos en ${business.locality} y alrededores, en todo el partido y la zona.`}
+    waMessage={d.waMessage}
+    ctaLabel={d.ctaLabel}
+  />
+</Base>
+
+<style>
+  .hero { position: relative; isolation: isolate; background: var(--brand-900); color: var(--on-brand-muted); overflow: hidden; }
+  .hero :global(.hero-bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+  .hero :global(.hero-bg) { object-position: 70% 50%; }
+  .hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(11 27 48 / 0.9), rgb(20 45 78 / 0.86)); }
+  @media (min-width: 60rem) { .hero::after { background: linear-gradient(180deg, transparent 60%, rgb(11 27 48 / 0.85)), linear-gradient(100deg, rgb(11 27 48 / 0.96) 0%, rgb(20 45 78 / 0.9) 50%, rgb(20 45 78 / 0.5) 100%); } }
+  .hero-inner { padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(3rem, 7vw, 5rem); }
+  .crumbs { font-size: 0.93rem; margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .crumbs a { color: #fff; }
+  .hero h1 { color: #fff; max-width: 18ch; }
+  .hero-lede { margin-top: 1.5rem; font-size: clamp(1.0625rem, 1rem + 0.45vw, 1.3rem); max-width: 58ch; color: #dbe3ec; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.25rem; }
+
+  .incluye { background: var(--surface); }
+  .inc-grid { display: grid; gap: 2.5rem; }
+  .inc-sub { margin-top: 1rem; color: var(--muted); font-size: 1.1rem; max-width: 40ch; }
+  .inc-cta { margin-top: 1.75rem; }
+  .hero-creds { margin-top: clamp(2.5rem, 6vw, 4rem); padding-top: 2rem; border-top: 1px solid rgb(255 255 255 / 0.14); }
+  .inc-list { list-style: none; margin: 0; padding: 0; counter-reset: it; border-top: 1px solid var(--line); }
+  .inc-list li { counter-increment: it; position: relative; padding: 1.4rem 0 1.4rem 3.25rem; border-bottom: 1px solid var(--line); }
+  .inc-list li::before { content: counter(it, decimal-leading-zero); position: absolute; left: 0; top: 1.55rem; font-weight: 800; font-stretch: 115%; color: var(--brand-700); font-size: 1rem; }
+  .inc-list h3 { font-size: 1.2rem; margin-bottom: 0.35rem; }
+  .inc-list p { color: var(--muted); max-width: 60ch; }
+  @media (min-width: 60rem) {
+    .inc-grid { grid-template-columns: 0.9fr 1.1fr; gap: 4.5rem; }
+    .inc-head { position: sticky; top: 6rem; align-self: start; }
+  }
+
+
+  .rel-grid { display: grid; gap: 2rem; }
+  @media (min-width: 60rem) { .rel-grid { grid-template-columns: 1fr 2fr; gap: 4rem; } }
+</style>
