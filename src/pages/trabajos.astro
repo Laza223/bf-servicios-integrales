@@ -33,7 +33,7 @@ const waMessage = 'Hola BF, vi sus trabajos en la web y quiero pedir presupuesto
         {trabajos.map((t) => (
           <li>
             <figure>
-              <Image src={t.image} alt={t.alt} widths={[400, 640, 900]} sizes="(min-width: 60rem) 33vw, (min-width: 40rem) 50vw, 100vw" />
+              <Image src={t.image} alt={t.alt} widths={[400, 640, 900]} sizes="(min-width: 60rem) 33vw, (min-width: 40rem) 50vw, 100vw" style={t.position ? `object-position: ${t.position}` : undefined} />
               <figcaption>
                 <strong>{t.title}</strong>
                 <span>{t.place && `${t.place} · `}<a href={`/${t.service}/`}>{nameOf(t.service)}</a></span>
