@@ -6,13 +6,13 @@ export const business = {
   tagline: 'Electricidad industrial y seguridad electrónica',
   url: 'https://bfserviciosintegrales.com',
   // Formato wa.me argentino: 54 9 + característica sin 0 + número sin 15. PENDIENTE.
-  whatsapp: '5492323000000',
+  whatsapp: '5492323363438',
   // Formato E.164 para tel: y schema. PENDIENTE.
-  phone: '+5492323000000',
-  phoneDisplay: '2323 00-0000',
-  // Vacíos = no se muestran ni van al JSON-LD. PENDIENTE: email y URL real del Instagram.
+  phone: '+5492323363438',
+  phoneDisplay: '2323 36-3438',
+  // Vacíos = no se muestran ni van al JSON-LD. PENDIENTE: email.
   email: '' as string,
-  instagram: '' as string,
+  instagram: 'https://www.instagram.com/serviciosintegralesbf/' as string,
   locality: 'Luján',
   region: 'Provincia de Buenos Aires',
   regionShort: 'Bs. As.',
