@@ -6,6 +6,8 @@
   --brand-700: #1d3d66;
   --accent: #f97316;
   --accent-600: #ea580c;
+  --cta: #25d366;
+  --cta-hover: #3ee27e;
   --bg: #f4f6f8;
   --surface: #ffffff;
   --text: #202833;
@@ -81,7 +83,7 @@ html { accent-color: var(--accent); caret-color: var(--accent); scrollbar-color:
 
 /* Botones */
 .btn {
-  --btn-bg: var(--accent);
+  --btn-bg: var(--cta);
   --btn-fg: var(--brand-900);
   display: inline-flex;
   align-items: center;
@@ -103,7 +105,7 @@ html { accent-color: var(--accent); caret-color: var(--accent); scrollbar-color:
   box-shadow: 0 1px 2px rgb(11 27 48 / 0.18), 0 6px 14px rgb(11 27 48 / 0.16);
   transition: transform 0.25s var(--ease), background-color 0.2s, box-shadow 0.25s var(--ease);
 }
-.btn:hover { background: #fb8a3c; color: var(--brand-900); transform: translateY(-1px); box-shadow: 0 2px 4px rgb(11 27 48 / 0.2), 0 10px 22px rgb(11 27 48 / 0.2); }
+.btn:hover { background: var(--cta-hover); color: var(--brand-900); transform: translateY(-1px); box-shadow: 0 2px 4px rgb(11 27 48 / 0.2), 0 10px 22px rgb(11 27 48 / 0.2); }
 .btn:active { transform: translateY(1px); box-shadow: 0 1px 2px rgb(11 27 48 / 0.18); }
 .btn .icon { flex: none; }
 

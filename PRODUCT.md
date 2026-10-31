@@ -50,7 +50,7 @@ Es un electricista industrial (título de CFP, más de 5 años de experiencia) q
 - Sin foto de cara del dueño: la confianza se construye con trabajos reales, credenciales y proceso.
 - Voz: español rioplatense, directo y técnico sin jerga innecesaria, con trato de vos.
 - **Dirección visual (elegida por el dueño)**: el estándar del rubro, ejecutado al máximo nivel de craft, sin rarezas. Vara de calidad: Prosegur Alarmas, Verisure y Schneider Electric.
-- **Paleta fijada por el dueño** ("azul industrial + naranja: sobria, técnica y con presencia"): marca #142D4E, acento #F97316, fondo #F4F6F8, texto #202833. El naranja con texto blanco no llega a AA, así que el texto sobre naranja va en #142D4E.
+- **Paleta fijada por el dueño** ("azul industrial + naranja: sobria, técnica y con presencia"): marca #142D4E, acento #F97316, fondo #F4F6F8, texto #202833. El naranja con texto blanco no llega a AA, así que el texto sobre naranja va en #142D4E. Decisión posterior del dueño: los CTA de WhatsApp van en verde #25D366 (texto #0B1B30), porque convierte más; el naranja queda para el logo y el foco.
 
 ## Evidence on Hand
 
