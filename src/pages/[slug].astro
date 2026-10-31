@@ -61,35 +61,35 @@ const isUrgent = entry.id === 'electricista-domiciliario';
 
 <Base title={d.title} description={d.description} waMessage={d.waMessage} ogImage={d.image} jsonLd={jsonLd}>
   <section class="hero">
-    <Image src={d.image} alt="" class="hero-bg" widths={[640, 960, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image src={d.image} alt="" class="hero-bg" data-parallax="3" widths={[640, 960, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="wrap hero-inner">
-      <nav class="crumbs" aria-label="Migas de pan">
+      <nav class="crumbs" aria-label="Migas de pan" data-hero style="--d: 0">
         <a href="/">Inicio</a> <span aria-hidden="true">/</span> <span aria-current="page">{d.name}</span>
       </nav>
-      <h1>{d.h1}</h1>
-      <p class="hero-lede">{d.lead}</p>
-      <div class="hero-actions">
-        <a class="btn" href={waLink(d.waMessage)} target="_blank" rel="noopener" data-cta={`whatsapp-hero-${entry.id}`}>
+      <h1 data-hero style="--d: 80">{d.h1}</h1>
+      <p class="hero-lede" data-hero style="--d: 200">{d.lead}</p>
+      <div class="hero-actions" data-hero style="--d: 320">
+        <a class="btn" data-pulse href={waLink(d.waMessage)} target="_blank" rel="noopener" data-cta={`whatsapp-hero-${entry.id}`}>
           <Icon name="whatsapp" size={22} /> {d.ctaLabel}
         </a>
         <a class="btn btn--ghost" href={telLink} data-cta={`tel-hero-${entry.id}`}>
           <Icon name="Phone" size={20} /> {isUrgent ? `Llamar · ${business.phoneDisplay}` : 'Llamar · urgencias 24 h'}
         </a>
       </div>
-      <div class="hero-creds"><Credentials /></div>
+      <div class="hero-creds" data-hero style="--d: 460"><Credentials /></div>
     </div>
   </section>
 
   <section class="section incluye" aria-labelledby="incluye-titulo">
     <div class="wrap inc-grid">
-      <div class="inc-head">
+      <div class="inc-head" data-reveal>
         <h2 id="incluye-titulo">Qué hacemos</h2>
         <p class="inc-sub">{d.summary} Visita y presupuesto sin cargo en {business.locality} y alrededores.</p>
         <a class="btn inc-cta" href={waLink(d.waMessage)} target="_blank" rel="noopener" data-cta={`whatsapp-incluye-${entry.id}`}>
           <Icon name="whatsapp" size={22} /> {d.ctaLabel}
         </a>
       </div>
-      <ol class="inc-list">
+      <ol class="inc-list" data-stagger>
         {d.items.map((i) => (
           <li>
             <h3>{i.title}</h3>
@@ -106,7 +106,7 @@ const isUrgent = entry.id === 'electricista-domiciliario';
 
   {related.length > 0 && (
     <section class="section related" aria-labelledby="rel-titulo">
-      <div class="wrap rel-grid">
+      <div class="wrap rel-grid" data-reveal>
         <h2 id="rel-titulo">También hacemos</h2>
         <ServiceRows items={related} />
       </div>

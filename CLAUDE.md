@@ -32,4 +32,5 @@ pnpm build         # verde, 10 HTML + sitemap
 - **Nada de fotos de stock como trabajos propios**: `/trabajos/`, la banda del home y los links del menú solo aparecen con `real = true`. `email` e `instagram` vacíos no se renderizan.
 - YAML del frontmatter: los valores con `: ` o que terminan en `:` van entre comillas.
 - `title` ≤65 y `description` ≤160 caracteres (los valida el schema).
+- **Movimiento (GSAP)**: `src/scripts/motion.ts` se engancha por atributos `data-reveal|stagger|mask|parallax|process`; el HTML siempre trae el estado final y GSAP solo anima hacia él (`gsap.from`), así sin JS se ve todo. Arranca en la primera interacción o a los 6 s (cargarlo en idle bajaba Lighthouse a 91 por TBT) y nunca con `prefers-reduced-motion`. El héroe, el anillo del CTA y la barra mobile son CSS puro. Solo se anima lo que está fuera de pantalla al cargar. Three.js descartado por peso.
 - Solo pnpm (`pnpm add -E`, `pnpm exec`, `pnpm dlx`).

@@ -124,6 +124,26 @@ html { accent-color: var(--accent); caret-color: var(--accent); scrollbar-color:
 }
 .btn--navy:hover { background: var(--brand-700); color: var(--on-brand); box-shadow: 0 3px 0 rgb(11 27 48 / 0.2), 0 10px 24px rgb(20 45 78 / 0.28); }
 
+/* Movimiento. Todo parte del estado final: sin JS o con reduced-motion la página se ve completa. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bg { scale: 1.08; }
+  /* Entrada del héroe: solo CSS, para no esperar a GSAP ni parpadear. `backwards` = no pisa el estado final. */
+  [data-hero] { animation: rise 0.9s var(--ease) calc(var(--d, 0) * 1ms) backwards; }
+  .hero-bg { animation: settle 2.6s var(--ease) backwards; }
+  @keyframes rise { from { opacity: 0; transform: translateY(1.25rem); } }
+  @keyframes settle { from { scale: 1.16; } }
+
+  /* Anillo discreto en el CTA principal: 4 veces y se calla. */
+  .btn[data-pulse] { position: relative; }
+  .btn[data-pulse]::after {
+    content: ''; position: absolute; inset: -3px; border: 2px solid var(--cta); border-radius: calc(var(--radius) + 3px);
+    opacity: 0; pointer-events: none; animation: ring 3.4s ease-out 3s 4;
+  }
+  .btn[data-pulse]:hover::after, .btn[data-pulse]:focus-visible::after { animation: none; }
+  @keyframes ring { 0% { opacity: 0.75; transform: scale(1); } 65%, 100% { opacity: 0; transform: scale(1.16, 1.4); } }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }

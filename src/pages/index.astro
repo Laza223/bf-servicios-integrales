@@ -44,20 +44,20 @@ const faqLd = {
   jsonLd={[faqLd]}
 >
   <section class="hero">
-    <Image src={heroImg} alt="" class="hero-bg" widths={[640, 960, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Image src={heroImg} alt="" class="hero-bg" data-parallax="3" widths={[640, 960, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
     <div class="wrap hero-inner">
-      <p class="hero-place"><Icon name="MapPin" size={18} /> Luján, Provincia de Buenos Aires</p>
-      <h1>Electricista industrial y seguridad electrónica en Luján</h1>
-      <p class="hero-lede">Tableros, motores y mantenimiento para industrias. Cámaras, alarmas y porteros para casas y comercios. Visita y presupuesto sin cargo, urgencias las 24 horas.</p>
-      <div class="hero-actions">
-        <a class="btn" href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-hero">
+      <p class="hero-place" data-hero style="--d: 0"><Icon name="MapPin" size={18} /> Luján, Provincia de Buenos Aires</p>
+      <h1 data-hero style="--d: 80">Electricista industrial y seguridad electrónica en Luján</h1>
+      <p class="hero-lede" data-hero style="--d: 200">Tableros, motores y mantenimiento para industrias. Cámaras, alarmas y porteros para casas y comercios. Visita y presupuesto sin cargo, urgencias las 24 horas.</p>
+      <div class="hero-actions" data-hero style="--d: 320">
+        <a class="btn" data-pulse href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-hero">
           <Icon name="whatsapp" size={22} /> Pedir visita sin cargo
         </a>
         <a class="btn btn--ghost hero-tel" href={telLink} data-cta="tel-hero">
           <Icon name="Phone" size={20} /> Llamar · urgencias 24 h
         </a>
       </div>
-      <div class="hero-creds">
+      <div class="hero-creds" data-hero style="--d: 460">
         <Credentials />
       </div>
     </div>
@@ -65,13 +65,13 @@ const faqLd = {
 
   <section class="section industria" aria-labelledby="industria-titulo">
     <div class="wrap ind-grid">
-      <div class="ind-media">
-        <Image src={plantImg} alt="Tablero general de distribución eléctrica en una planta" widths={[480, 720, 960]} sizes="(min-width: 60rem) 45vw, 100vw" />
+      <div class="ind-media" data-mask>
+        <Image src={plantImg} alt="Tablero general de distribución eléctrica en una planta" data-parallax="5" widths={[480, 720, 960]} sizes="(min-width: 60rem) 45vw, 100vw" />
       </div>
-      <div class="ind-copy">
+      <div class="ind-copy" data-reveal>
         <h2 id="industria-titulo">Listo para entrar a tu planta</h2>
         <p class="lede">Electricista industrial con título de Centro de Formación Profesional y más de 5 años de experiencia. Llegamos con factura y seguro con cláusula de no repetición, que es lo que te pide seguridad e higiene para dejarnos pasar.</p>
-        <ul class="ind-list">
+        <ul class="ind-list" data-stagger>
           {industria.data.items.slice(0, 5).map((i) => (
             <li><Icon name="Check" size={20} /> {i.title}</li>
           ))}
@@ -89,7 +89,7 @@ const faqLd = {
 
   <section class="section servicios" aria-labelledby="servicios-titulo">
     <div class="wrap">
-      <h2 id="servicios-titulo">Todo lo eléctrico y la seguridad, con un solo técnico</h2>
+      <h2 id="servicios-titulo" data-reveal>Todo lo eléctrico y la seguridad, con un solo técnico</h2>
       <div class="groups">
         <div class="group">
           <h3>Seguridad electrónica</h3>
@@ -109,11 +109,11 @@ const faqLd = {
 
   <section class="section cobertura" aria-labelledby="cobertura-titulo">
     <div class="wrap cob-grid">
-      <div>
+      <div data-reveal>
         <h2 id="cobertura-titulo">Dónde trabajamos</h2>
         <p class="lede">Base en Luján, Provincia de Buenos Aires. Trabajamos en todo el partido y en la zona; para obras más lejos, coordinamos viáticos.</p>
       </div>
-      <div class="zones">
+      <div class="zones" data-stagger>
         <div>
           <h3>Partido de Luján</h3>
           <ul>{coverage.partido.map((z) => <li>{z}</li>)}</ul>
@@ -128,7 +128,7 @@ const faqLd = {
 
   {trabajosReales && (
   <section class="trabajos-band" aria-labelledby="trabajos-titulo">
-    <div class="wrap tb-inner">
+    <div class="wrap tb-inner" data-reveal>
       <div>
         <h2 id="trabajos-titulo">Mirá trabajos reales</h2>
         <p>Tableros de control, motores y cámaras instalados por BF.</p>
@@ -168,8 +168,9 @@ const faqLd = {
 
   .industria { background: var(--surface); }
   .ind-grid { display: grid; gap: 2.5rem; align-items: center; }
-  .ind-media { position: relative; }
-  .ind-media :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius); }
+  .ind-media { position: relative; overflow: hidden; border-radius: var(--radius); }
+  .ind-media :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  @media (min-width: 60rem) and (hover: hover) and (prefers-reduced-motion: no-preference) { .ind-media :global(img) { scale: 1.1; } }
   .ind-media::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); background: linear-gradient(180deg, transparent 50%, rgb(20 45 78 / 0.35)); }
   .ind-copy .lede { margin-top: 1.25rem; }
   .ind-list { margin-top: 1.75rem; display: grid; gap: 0.6rem; }
