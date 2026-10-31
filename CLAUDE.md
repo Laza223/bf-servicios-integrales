@@ -27,7 +27,7 @@ pnpm build         # verde, 10 HTML + sitemap
 - **WhatsApp argentino**: `549` + código de área sin 0 + número sin 15 (Luján: `5492323XXXXXX`).
 - **Claims prohibidos**: nunca "matriculado" (tiene título de CFP, no matrícula), nunca "PLC", nunca "solar", nunca "sin interés", nunca precios. Ajax no aparece hasta que instale una.
 - **Sin páginas por localidad** (doorway): las zonas van en la sección de cobertura.
-- **Texto sobre naranja va en navy** (`--brand-900`): blanco sobre `#F97316` no pasa AA.
+- **Texto sobre naranja o verde va en navy** (`--brand-900`): blanco sobre `#F97316` o `#25D366` no pasa AA. Los CTA de WhatsApp son verdes (`--cta`); el naranja queda para el logo, el foco y los acentos.
 - **CSS con scope de Astro no llega al `<svg>` de `Icon.astro`/`Logo.astro`**: para colorear íconos desde el padre, usar `:global(.icon)`.
 - **Nada de fotos de stock como trabajos propios**: `/trabajos/`, la banda del home y los links del menú solo aparecen con `real = true`. `email` e `instagram` vacíos no se renderizan.
 - YAML del frontmatter: los valores con `: ` o que terminan en `:` van entre comillas.
