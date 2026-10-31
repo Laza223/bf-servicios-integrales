@@ -178,6 +178,9 @@ const businessLd = {
       <a class="mc-call" href={telLink} data-cta="tel-sticky"><Icon name="Phone" size={20} /> Llamar</a>
       <a class="mc-wa" href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-sticky"><Icon name="whatsapp" size={20} /> WhatsApp</a>
     </div>
+    <script>
+      import '../scripts/motion.ts';
+    </script>
   </body>
 </html>
 
@@ -238,6 +241,8 @@ const businessLd = {
     .site-footer { padding-bottom: 3rem; }
   }
 
+  @media (prefers-reduced-motion: no-preference) { .mobile-cta { animation: cta-in 0.6s var(--ease) backwards; } }
+  @keyframes cta-in { from { transform: translateY(100%); } }
   .mobile-cta { position: fixed; z-index: 60; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: 1fr 1.6fr; gap: 0.5rem; padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom)); background: rgb(255 255 255 / 0.97); box-shadow: 0 -1px 0 var(--line), 0 -8px 24px rgb(11 27 48 / 0.12); }
   .mobile-cta a { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3.1rem; border-radius: var(--radius); font-weight: 750; text-decoration: none; }
   .mc-call { background: var(--brand); color: #fff; }

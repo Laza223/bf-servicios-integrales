@@ -12,13 +12,13 @@ const { heading, text, waMessage, ctaLabel = 'Pedir visita sin cargo' } = Astro.
 ---
 
 <section class="final" aria-labelledby="cierre-titulo">
-  <div class="wrap inner">
+  <div class="wrap inner" data-stagger>
     <div>
       <h2 id="cierre-titulo">{heading}</h2>
       <p>{text}</p>
     </div>
     <div class="actions">
-      <a class="btn" href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-final">
+      <a class="btn" data-pulse href={waLink(waMessage)} target="_blank" rel="noopener" data-cta="whatsapp-final">
         <Icon name="whatsapp" size={22} /> {ctaLabel}
       </a>
       <a class="btn btn--ghost" href={telLink} data-cta="tel-final">

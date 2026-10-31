@@ -14,8 +14,8 @@ const steps = [
 
 <section class="section process" aria-labelledby="proceso-titulo">
   <div class="wrap">
-    <h2 id="proceso-titulo">{heading}</h2>
-    <ol class="steps">
+    <h2 id="proceso-titulo" data-reveal>{heading}</h2>
+    <ol class="steps" data-process>
       {steps.map((s, i) => (
         <li>
           <span class="num" aria-hidden="true">{i + 1}</span>
@@ -37,7 +37,7 @@ const steps = [
   @media (min-width: 60rem) {
     .steps { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
     .steps li { padding-left: 0; padding-top: 4.5rem; }
-    .steps li::before { content: ''; position: absolute; top: 1.3rem; left: 3.5rem; right: -1rem; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); }
+    .steps li::before { content: ''; position: absolute; top: 1.3rem; left: 3.5rem; right: -1rem; height: 2px; background: repeating-linear-gradient(90deg, var(--brand-700) 0 8px, transparent 8px 14px); clip-path: inset(0 calc(100% * (1 - var(--p, 1))) 0 0); }
     .steps li:last-child::before { display: none; }
   }
 </style>

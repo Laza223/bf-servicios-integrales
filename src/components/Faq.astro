@@ -9,7 +9,7 @@ const { faqs, heading = 'Preguntas frecuentes' } = Astro.props;
 <section class="section faq" aria-labelledby="faq-titulo">
   <div class="wrap faq-grid">
     <h2 id="faq-titulo">{heading}</h2>
-    <div class="list">
+    <div class="list" data-reveal>
       {faqs.map((f, i) => (
         <details open={i === 0}>
           <summary><h3>{f.q}</h3></summary>
@@ -29,6 +29,11 @@ const { faqs, heading = 'Preguntas frecuentes' } = Astro.props;
   summary h3 { font-size: 1.15rem; font-stretch: 105%; font-weight: 700; letter-spacing: -0.005em; color: var(--text); }
   summary::after { content: ''; flex: none; width: 0.7rem; height: 0.7rem; border-right: 2.5px solid var(--brand); border-bottom: 2.5px solid var(--brand); transform: rotate(45deg) translateY(-25%); transition: transform 0.3s var(--ease); }
   details[open] summary::after { transform: rotate(-135deg) translateY(-10%); }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(:root) { interpolate-size: allow-keywords; }
+    details::details-content { height: 0; overflow: clip; transition: height 0.4s var(--ease), content-visibility 0.4s allow-discrete; }
+    details[open]::details-content { height: auto; }
+  }
   summary:hover h3 { color: var(--brand); }
   details p { padding: 0 2.5rem 1.4rem 0; color: var(--muted); max-width: 68ch; }
   @media (min-width: 60rem) { .faq-grid { grid-template-columns: 1fr 2fr; gap: 4rem; } }
